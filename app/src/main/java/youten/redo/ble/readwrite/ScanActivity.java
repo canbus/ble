@@ -40,7 +40,6 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 import youten.redo.ble.util.BleUtil;
 import youten.redo.ble.util.ScannedDevice;
-
 /**
  * BLEデバイスをスキャンし、一覧に表示するActivity。
  */
@@ -166,7 +165,11 @@ public class ScanActivity extends Activity implements BluetoothAdapter.LeScanCal
     @NeedsPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
     void startScan() {
         if ((mBTAdapter != null) && (!mIsScanning)) {
+            if(mBTAdapter.isDiscovering()){
+                mBTAdapter.stopLeScan(this);
+            }
             mBTAdapter.startLeScan(this);
+            //扫描到后,会调用onLeScan()回调
             mIsScanning = true;
             setProgressBarIndeterminateVisibility(true);
             invalidateOptionsMenu();
@@ -181,4 +184,5 @@ public class ScanActivity extends Activity implements BluetoothAdapter.LeScanCal
         setProgressBarIndeterminateVisibility(false);
         invalidateOptionsMenu();
     }
+
 }
